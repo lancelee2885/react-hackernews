@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import StoryList from './StoryList';
+import axios from 'axios';
+ 
+class App extends Component {
+  state = {
+    hits: [],
+    term: ""
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  async componentDidMount() {
+    const response = await axios.get(
+      `https://hn.algolia.com/api/v1/search?query=${term}`);
+    const { hits } = response.data;
+    this.setState({
+      hits
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <StoryList props={this.state.hits} />
+      </div>
+    );
+  }
 }
 
+ 
 export default App;
